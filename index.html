@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="input-text">
+    <span id="reverse"></span>
+    <script type="module">
+    import { fromEvent } from 'https://dev.jspm.io/rxjs@6/_esm2015';
+    import { map, filter } from 'https://dev.jspm.io/rxjs@6/_esm2015/operators';
+    const input = document.getElementById('input-text');
+    const reverse = document.getElementById('reverse')
+    const observable = fromEvent(input, 'keyup')
+    let reverseText = '';
+
+    const obsSubscribe = observable.subscribe(event => {
+        reverseText += event.key
+        if(reverseText === 'error') obsSubscribe.error('Se ha ingresado la palabra ERROR');
+        if(reverseText === 'complete') obsSubscribe.complete()
+
+        reverse.textContent = reverseText.split('').reverse().join('');
+        unsuscribe();
+        setTimeout(() => {
+            obsSubscribe.unsubscribe();
+            cleanHTML();
+        }, 30000);
+    },
+        error => {
+            
+            console.log(error);
+            cleanHTML();
+        },
+
+        () => {
+            cleanHTML();
+            console.log('Se ha ingresado la palabra COMPLETE');
+            
+        },
+    );
+
+    const cleanHTML = () => {
+        input.value = '';
+        input.disabled = true;
+        reverseText = '';
+        reverse.textContent = '';
+    }
+
+    const unsuscribe = () => {
+        
+    } 
+
+    
+   
+</script>
+</body>
+</html>
